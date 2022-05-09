@@ -19,12 +19,15 @@ from django.urls import path, include
 from rest_framework import routers
 from Category import views
 
-router = routers.DefaultRouter()
-router.register(r'category', views.CategoryView, basename='Category')
-router.register('category/creates/', views.CategoryView, basename='Category-creates')
+api_urls = [
+    path('category/', include('Category.urls')),
+    path('', include('Category.urls')),
+]
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api/', include(router.urls)),
+    # path('', include(router.urls)),
+    # path('api/', include(router.urls)),
+    path('api/', include(api_urls)),
+    path('', include(api_urls))
 
 ]
