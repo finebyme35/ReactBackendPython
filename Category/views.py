@@ -13,16 +13,7 @@ class CategoryListView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
         return serializer.data
-    def put(self, request, pk):
-        queryset = Category.objects.get(id=pk)
-        serializer = CategorySerializer(queryset, many=False, data=request.data)
-        if serializer.is_valid():
-            queryset.updated_date = timezone.now()
-            queryset.save()
-            return Response({'status': 'category updated'})
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+    
     
 
 class CategoryDetailView(RetrieveUpdateDestroyAPIView):
@@ -39,4 +30,14 @@ class CategoryDetailView(RetrieveUpdateDestroyAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-    
+    def put(self, request, pk):
+        queryset = Category.objects.get(id=pk)
+        serializer = CategorySerializer(queryset, many=False, data=request.data)
+        if request.method == 'PUT':
+            if serializer.is_valid():
+                queryset.updated_date = timezone.now()
+                queryset.save()
+                return Response({'status': 'category updated'})
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
